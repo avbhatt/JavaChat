@@ -11,6 +11,8 @@ public class SimpleChatClient {
 	BufferedReader br;
 	JTextArea area;
 	String username;
+	String ip;
+	int port;
 
 	public static void main(String[] args) {
 		SimpleChatClient cli = new SimpleChatClient();
@@ -20,7 +22,7 @@ public class SimpleChatClient {
 
 	public void setUpNetworking() {
 		try{
-			sock = new Socket("127.0.0.1", 60038);
+			sock = new Socket(ip, port);
 			//sock = new Socket("172.16.76.128", 60038);
 			pw = new PrintWriter(sock.getOutputStream());
 			isr = new InputStreamReader(sock.getInputStream());
@@ -34,17 +36,34 @@ public class SimpleChatClient {
 	}
 
 	public void start() {
-		JFrame frame = new JFrame("SimpChat");
+		JFrame frame = new JFrame("JavaChat");
 		JTextField field = new JTextField(20);
 		/*JTextArea */area = new JTextArea(15,25);
 		JPanel panel = new JPanel();
 		JScrollPane scroll = new JScrollPane(area);
+		JTextField ipA = new JTextField(20);
+		ipA.setText("192.168.1.");
+		JTextField por = new JTextField(20);
+		por.setText("60038");
+		JTextField user = new JTextField(20);
 
-		username = (String)JOptionPane.showInputDialog(
+		Object[] inits = {"IP Address", ipA, "Port", por, "Username", user};
+
+		int option = JOptionPane.showConfirmDialog(null, inits, "Login", JOptionPane.OK_CANCEL_OPTION);
+
+		if (option == JOptionPane.OK_OPTION) {
+			ip = ipA.getText();
+			port = Integer.parseInt(por.getText());
+			username = user.getText();
+		}
+		else
+			System.exit(0);
+
+		/*username = (String)JOptionPane.showInputDialog(
 				frame,
 				"Enter Username:",
 				"SimpChat",
-				JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.PLAIN_MESSAGE);*/
 
 		// Anonymous actionlistener to send text
 		ActionListener listen = new ActionListener() {
